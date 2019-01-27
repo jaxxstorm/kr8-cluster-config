@@ -7011,7 +7011,7 @@ spec:
   resources:
     requests:
       memory: 400Mi
-  retention: 10d
+  retention: 2d
   ruleSelector:
     matchLabels:
       prometheus: k8s
@@ -8569,26 +8569,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    k8s-app: aws-cluster-autoscaler
-  name: aws-cluster-autoscaler
-  namespace: monitoring
-spec:
-  endpoints:
-  - interval: 30s
-    targetPort: 8085
-  jobLabel: app
-  namespaceSelector:
-    matchNames:
-    - kube-system
-  selector:
-    matchLabels:
-      app: aws-cluster-autoscaler
-
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  labels:
     k8s-app: external-dns
   name: external-dns
   namespace: monitoring
@@ -8609,28 +8589,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    k8s-app: gitlab-runner
-  name: gitlab-runner
-  namespace: monitoring
-spec:
-  endpoints:
-  - interval: 30s
-    targetPort: 9252
-  jobLabel: app
-  namespaceSelector:
-    matchNames:
-    - gitlab
-  selector:
-    matchLabels:
-      app: gitlab-runner
-
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  labels:
-    k8s-app: nginx-ingress-default
-  name: nginx-ingress-default
+    k8s-app: nginx-ingress
+  name: nginx-ingress
   namespace: monitoring
 spec:
   endpoints:
@@ -8643,5 +8603,5 @@ spec:
   selector:
     matchLabels:
       app: nginx-ingress
-      release: nginx-ingress-default
+      release: nginx-ingress
 

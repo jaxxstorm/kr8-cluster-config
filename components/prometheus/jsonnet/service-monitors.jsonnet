@@ -19,28 +19,6 @@ local servicemonitor(name, joblabel='app', namespace='monitoring') = {
 
 ////////// Define each service monitor
 {
-  // aws-cluster-autoscaler
-  serviceMonitorClusterAutoscaler:
-    servicemonitor(name='aws-cluster-autoscaler') +
-    {
-      spec+: {
-        endpoints: [
-          {
-            interval: '30s',
-            targetPort: 8085,
-          },
-        ],
-        namespaceSelector: {
-          matchNames: ['kube-system'],
-        },
-        selector: {
-          matchLabels: {
-            app: 'aws-cluster-autoscaler',
-          },
-        },
-      },
-    },
-
   // external-dns
   serviceMonitorExternalDNS:
     servicemonitor(name='external-dns') +
@@ -65,7 +43,7 @@ local servicemonitor(name, joblabel='app', namespace='monitoring') = {
 
   // default nginx ingress controller
   serviceMonitorNginxIngressDefault:
-    servicemonitor(name='nginx-ingress-default') +
+    servicemonitor(name='nginx-ingress') +
     {
       spec+: {
         endpoints: [
@@ -80,29 +58,7 @@ local servicemonitor(name, joblabel='app', namespace='monitoring') = {
         selector: {
           matchLabels: {
             app: 'nginx-ingress',
-            release: 'nginx-ingress-default',
-          },
-        },
-      },
-    },
-
-  // gitlab runner
-  serviceMonitorGitlabRunner:
-    servicemonitor(name='gitlab-runner') +
-    {
-      spec+: {
-        endpoints: [
-          {
-            interval: '30s',
-            targetPort: std.parseInt('9252'),
-          },
-        ],
-        namespaceSelector: {
-          matchNames: ['gitlab'],
-        },
-        selector: {
-          matchLabels: {
-            app: 'gitlab-runner',
+            release: 'nginx-ingress',
           },
         },
       },

@@ -40,6 +40,7 @@
     prometheus+: {
       externalName: 'prom-k8s.home.lbrlabs.com',
       volumeClaimTemplate: {},
+      retention: '2d',
     },
   },
 }
