@@ -86,28 +86,6 @@ local servicemonitor(name, joblabel='app', namespace='monitoring') = {
       },
     },
 
-  // BIIT
-  serviceMonitorBIIT:
-    servicemonitor(name='biit') +
-    {
-      spec+: {
-        endpoints: [
-          {
-            interval: '30s',
-            port: 'biit-prometheus-jmx',
-          },
-        ],
-        namespaceSelector: {
-          any: true,
-        },
-        selector: {
-          matchLabels: {
-            app: 'biit',
-          },
-        },
-      },
-    },
-
   // gitlab runner
   serviceMonitorGitlabRunner:
     servicemonitor(name='gitlab-runner') +

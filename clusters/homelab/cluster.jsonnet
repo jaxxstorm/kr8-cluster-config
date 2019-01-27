@@ -10,6 +10,7 @@
     sealed_secrets: { path: 'components/sealed_secrets' },
     metallb: { path: 'components/metallb' },
     nginx_ingress: { path: 'components/nginx_ingress' },
+    prometheus: { path: 'components/prometheus' },
   },
 
   sealed_secrets+: (import 'sealed-secret.key'),
@@ -31,5 +32,14 @@
       'briggs.work',
     ],
     tolerateMasters: true,
+  },
+  prometheus+: {
+    ingress_class: 'nginx',
+    ingress_enabled: true,
+    ingress_authenabled: false,
+    prometheus+: {
+      externalName: 'prom-k8s.home.lbrlabs.com',
+      volumeClaimTemplate: {},
+    },
   },
 }
