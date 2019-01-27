@@ -28,7 +28,7 @@ local kp = (import 'kube-prometheus/kube-prometheus.libsonnet') + (import 'kube-
         }, */
   },
   // Merge in our prometheus customisations and rules
-} + (import 'prometheus.jsonnet') + (import 'node-exporter.jsonnet') + (import 'rules/rules.jsonnet') + (import 'alerts/alerts.jsonnet');
+} + (import 'prometheus.jsonnet') + (import 'node-exporter.jsonnet');
 
 kube.objectValues(
   // Namespace is created in the namespace component
@@ -44,11 +44,9 @@ kube.objectValues(
   } +
   { ['node-exporter-' + name]: kp.nodeExporter[name] for name in std.objectFields(kp.nodeExporter) } +
   { ['kube-state-metrics-' + name]: kp.kubeStateMetrics[name] for name in std.objectFields(kp.kubeStateMetrics) } +
-  //{ ['alertmanager-' + name]: kp.alertmanager[name] for name in std.objectFields(kp.alertmanager) } +
   { ['prometheus-' + name]: kp.prometheus[name] for name in std.objectFields(kp.prometheus) } +
   //{ ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) }+
   (import 'service-monitors.jsonnet') +  // define service monitors
-  (import 'alertmanager-external.jsonnet') +  // define external alertmanager endpoint
   (import 'secret.jsonnet') +  // define basic auth secret
   {}
 )

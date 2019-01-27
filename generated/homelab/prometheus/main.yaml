@@ -7630,121 +7630,6 @@ spec:
     rules:
     - expr: node_textfile_mtime_seconds
       record: node_textfile_mtime
-  - name: akp-k8s-controlplane.rules
-    rules:
-    - expr: histogram_quantile(0.99, rate(apiserver_request_latencies_bucket[5m]))
-        / 1e+06
-      labels:
-        quantile: "0.99"
-      record: apiserver_latency_seconds:quantile
-    - expr: histogram_quantile(0.9, rate(apiserver_request_latencies_bucket[5m]))
-        / 1e+06
-      labels:
-        quantile: "0.9"
-      record: apiserver_latency_seconds:quantile
-    - expr: histogram_quantile(0.5, rate(apiserver_request_latencies_bucket[5m]))
-        / 1e+06
-      labels:
-        quantile: "0.5"
-      record: apiserver_latency_seconds:quantile
-    - expr: histogram_quantile(0.99, sum(scheduler_e2e_scheduling_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.99"
-      record: cluster:scheduler_e2e_scheduling_latency_seconds:quantile
-    - expr: histogram_quantile(0.9, sum(scheduler_e2e_scheduling_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.9"
-      record: cluster:scheduler_e2e_scheduling_latency_seconds:quantile
-    - expr: histogram_quantile(0.5, sum(scheduler_e2e_scheduling_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.5"
-      record: cluster:scheduler_e2e_scheduling_latency_seconds:quantile
-    - expr: histogram_quantile(0.99, sum(scheduler_scheduling_algorithm_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.99"
-      record: cluster:scheduler_scheduling_algorithm_latency_seconds:quantile
-    - expr: histogram_quantile(0.9, sum(scheduler_scheduling_algorithm_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.9"
-      record: cluster:scheduler_scheduling_algorithm_latency_seconds:quantile
-    - expr: histogram_quantile(0.5, sum(scheduler_scheduling_algorithm_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.5"
-      record: cluster:scheduler_scheduling_algorithm_latency_seconds:quantile
-    - expr: histogram_quantile(0.99, sum(scheduler_binding_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.99"
-      record: cluster:scheduler_binding_latency_seconds:quantile
-    - expr: histogram_quantile(0.9, sum(scheduler_binding_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.9"
-      record: cluster:scheduler_binding_latency_seconds:quantile
-    - expr: histogram_quantile(0.5, sum(scheduler_binding_latency_microseconds_bucket)
-        BY (le, cluster)) / 1e+06
-      labels:
-        quantile: "0.5"
-      record: cluster:scheduler_binding_latency_seconds:quantile
-  - name: akp-k8s-kubelet.alerts
-    rules:
-    - alert: KubeNodeDiskPressure
-      annotations:
-        description: Disk Pressure on node {{ $labels.node }}
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubenodediskpressure
-        summmary: Disk Pressure on node
-      expr: kube_node_status_condition{job="kube-state-metrics",condition="DiskPressure",
-        status="true"} == 1
-      for: 5m
-      labels:
-        severity: warning
-    - alert: KubeNodeOutOfDisk
-      annotations:
-        description: Out of disk on node {{ $labels.node }}
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubenodeoutofdisk
-        summmary: Out of disk on node
-      expr: kube_node_status_condition{job="kube-state-metrics",condition="OutOfDisk",
-        status="true"} == 1
-      for: 5m
-      labels:
-        severity: warning
-    - alert: KubeNodeMemoryPressure
-      annotations:
-        description: Memory Pressure on node {{ $labels.node }}
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubenodememorypressure
-        summmary: Memory Pressure on node
-      expr: kube_node_status_condition{job="kube-state-metrics",condition="MemoryPressure",
-        status="true"} == 1
-      for: 5m
-      labels:
-        severity: warning
-    - alert: KubeMasterNodeMissingTaint
-      annotations:
-        description: Master taint missing for master {{ $labels.node }}
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubemasternodemissingtaint
-        summmary: Master node is missing taint
-      expr: (kube_node_spec_taint{key!="node-role.kubernetes.io/master"} and on (node)
-        kube_node_labels {label_kubernetes_io_role = "master"}) == 1
-      for: 5m
-      labels:
-        severity: critical
-  - name: akp-gitlab-runner.alerts
-    rules:
-    - alert: GitlabRunnerError
-      annotations:
-        description: There are more than 1 errors on gitlab runner within last 10
-          minutes
-        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-gitlabrunnererror
-        summmary: Errors on gitlab runner
-      expr: changes(ci_runner_errors[10m]) > 0
-      labels:
-        severity: warning
   - name: kubernetes-absent
     rules:
     - alert: AlertmanagerDown
@@ -8049,6 +7934,18 @@ spec:
           / ignoring(instance, job, type)
         (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0)
           > 90
+      for: 15m
+      labels:
+        severity: warning
+    - alert: CPUThrottlingHigh
+      annotations:
+        message: '{{ printf "%0.0f" $value }}% throttling of CPU in namespace {{ $labels.namespace
+          }} for container {{ $labels.container_name }} in pod {{ $labels.pod_name
+          }}.'
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-cputhrottlinghigh
+      expr: "100 * sum(increase(container_cpu_cfs_throttled_periods_total[5m])) by
+        (container_name, pod_name, namespace) \n  / \nsum(increase(container_cpu_cfs_periods_total[5m]))
+        by (container_name, pod_name, namespace)\n  > 25 \n"
       for: 15m
       labels:
         severity: warning
