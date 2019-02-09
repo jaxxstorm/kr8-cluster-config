@@ -1,4 +1,44 @@
 ---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-0.20.1
+    component: controller
+    heritage: Tiller
+    release: nginx-ingress
+  name: nginx-ingress-controller
+  namespace: kube-system
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress
+      component: controller
+      release: nginx-ingress
+
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-0.20.1
+    component: default-backend
+    heritage: Tiller
+    release: nginx-ingress
+  name: nginx-ingress-default-backend
+  namespace: kube-system
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress
+      component: default-backend
+      release: nginx-ingress
+
+---
 apiVersion: v1
 data:
   enable-vts-status: "true"
@@ -424,44 +464,4 @@ spec:
           name: http
           protocol: TCP
       terminationGracePeriodSeconds: 60
-
----
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app: nginx-ingress
-    chart: nginx-ingress-0.20.1
-    component: controller
-    heritage: Tiller
-    release: nginx-ingress
-  name: nginx-ingress-controller
-  namespace: kube-system
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: nginx-ingress
-      component: controller
-      release: nginx-ingress
-
----
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  labels:
-    app: nginx-ingress
-    chart: nginx-ingress-0.20.1
-    component: default-backend
-    heritage: Tiller
-    release: nginx-ingress
-  name: nginx-ingress-default-backend
-  namespace: kube-system
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: nginx-ingress
-      component: default-backend
-      release: nginx-ingress
 

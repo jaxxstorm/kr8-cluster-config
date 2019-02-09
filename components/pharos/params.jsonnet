@@ -4,4 +4,5 @@
   image: 'quay.io/pusher/faros',
   version: 'latest',
   subpath: '',
+  kubecfg_update_args: '--ignore-unknown',
 }
