@@ -2,7 +2,7 @@ version: 2
 
 vars:
   KR8_COMPONENT: grafana
-  CHART_VER: 1.17.6
+  CHART_VER: 1.26.1
   CHART_NAME: grafana
 
 tasks:
