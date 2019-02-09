@@ -37,6 +37,7 @@
     ingress_class: 'nginx',
     ingress_enabled: true,
     ingress_authenabled: false,
+    enable_node_exporter: false,
     prometheus+: {
       externalName: 'prom-k8s.home.lbrlabs.com',
       volumeClaimTemplate: {},

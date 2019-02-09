@@ -8,6 +8,7 @@
   ingress_class: 'default',
   ingress_enabled: false,
   ingress_authenabled: true,
+  enable_node_exporter: true,
 
   password: '',
 
