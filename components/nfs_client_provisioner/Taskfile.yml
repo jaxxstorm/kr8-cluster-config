@@ -1,0 +1,21 @@
+version: 2
+
+vars:
+  KR8_COMPONENT: nfs_client_provisioner
+  CHART_VER: 1.2.3
+  CHART_NAME: nfs-client-provisioner
+
+tasks:
+  fetch:
+    desc: "fetch component dependencies"
+    cmds:
+      - rm -fr charts; mkdir charts
+      - helm fetch --repo https://kubernetes-charts.storage.googleapis.com --untar --untardir ./charts --version "{{.CHART_VER}}" "{{.CHART_NAME}}"
+
+
+  generate:
+    desc: "generate"
+    cmds:
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers clean-output
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers helm-render "{{.CHART_NAME}}"
+
