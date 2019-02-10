@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: unifi-exporter
+  name: unifi-exporter
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 60s
+    path: /unifi
+    port: http-metrics
+    targetPort: 9130
+  jobLabel: k8s-app
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    app: unifi-exporter
+

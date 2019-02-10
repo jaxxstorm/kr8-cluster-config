@@ -1,0 +1,24 @@
+version: 2
+
+vars:
+  KR8_COMPONENT: unifi-exporter
+
+tasks:
+  fetch:
+    desc: "fetch component dependencies"
+    cmds:
+      - rm -fr vendored; mkdir -p vendored
+      - curl https://raw.githubusercontent.com/jessestuart/unifi_exporter/master/manifests/unifi-exporter-deployment.yaml -o vendored/deployment.yaml
+      - curl https://raw.githubusercontent.com/jessestuart/unifi_exporter/master/manifests/unifi-exporter-service.yaml -o vendored/service.yaml
+      - curl https://raw.githubusercontent.com/jessestuart/unifi_exporter/master/manifests/unifi-exporter-servicemonitor-router.yaml -o vendored/service-monitor.yaml
+
+
+  generate:
+    desc: "generate"
+    cmds:
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers clean-output
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers yaml-install vendored/deployment.yaml
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers yaml-install vendored/service.yaml
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers yaml-install vendored/service-monitor.yaml
+      - KR8_COMPONENT={{.KR8_COMPONENT}} kr8-helpers jsonnet-render secret.jsonnet
+
