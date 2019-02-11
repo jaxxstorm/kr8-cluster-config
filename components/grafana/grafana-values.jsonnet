@@ -10,5 +10,5 @@ local config = std.extVar('kr8');
       config.ingress_name,
     ],
   },
-
+  'grafana.ini': config.grafana_config,
 }

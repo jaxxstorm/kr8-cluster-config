@@ -13,6 +13,7 @@
     prometheus: { path: 'components/prometheus' },
     unifi_exporter: { path: 'components/unifi_exporter' },
     nfs_client_provisioner: { path: 'components/nfs_client_provisioner' },
+    grafana: { path: 'components/grafana' },
   },
 
   sealed_secrets+: (import 'sealed-secret.key'),
@@ -56,6 +57,29 @@
   nfs_client_provisioner+: {
     nfs_server: 'jupiter.home.lbrlabs.com',
     base_path: '/export',
+  },
+
+  grafana+: {
+    ingress_name: 'grafana.home.lbrlabs.com',
+    envFromSecret: 'grafana-secrets',
+    grafana_config: {
+      server: {
+        domain: 'home.lbrlabs.com',
+        root_url: 'http://grafana.home.lbrlabs.com',
+      },
+      'auth.google': {
+        enabled: true,
+        client_id: '1032916947128-gfsbta7iqcs2g236eu42j71j00l9g6le.apps.googleusercontent.com',
+        auth_url: 'https://accounts.google.com/o/oauth2/auth',
+        token_url: 'https://accounts.google.com/o/oauth2/token',
+        allowed_domains: 'brig.gs lbrlabs.com lee@leebriggs.co.uk',
+        allow_sign_up: true,
+      },
+    },
+    extra_env+: {
+      GF_DATABASE_URL: 'AgAaVVXuRW+863tJ102E4n/U65+Ss8wNAz+TijTQlGRM0ezVdoZHkRUIXuGhItxWn26H2HbP2AAmkNvCdeV40tXS9NR9BbVDoKR/swH6j4NEo7VaR9rUj8K8bBCG7vAx0+aNYsH+QgutruVuwSzRmc73+BivFlrPIq776eeJ3H3yGN+LcyYqBVklYE027OhFCNBdZEVxmydi0FJAQ8jh+R71DC0Px5iTygDvyWGUZL8is9h014duIYoDuiKEb4qFiKlsA/bcgw3m2OgT4aPEY8/wiJD6Znn2N+rXGrMuqjtlECVjP/t7GoccvGnKlS7Q98M1298NDqLBQNZ3cSsoX0hWWB2eSUYi9UvDoFssku8r/w8bH4xdb5Qv3s2jyuIPmATdtfDQDImYlRj2+1rzRFn4G8WDp1gdgrnYsCrAxCbd23ciS8qdOJ9vhoGbGPFUcmF8uKlUiF4gkX/Z5c5UTbhUIZ8qxMZyAW4HQU/ynevsKhGBvvGClBg514G6htGhpabAwWUuAr8TviJnzlOryu1UNC0+J8iCEq+N6peGlD9tu/cvfLVc4d9flLm8c2jnLKDjRaFA2fRv9sqgZ2V4DxkhRjgm4aUaUJAZ+siruiLQzOgIyPrSXfjT1fchzLGkimMtpnWtgvVrsH3Iowj7yF3+UcfckNzSgrSCfvj6relx0xjm0kFEDTJjUQWSDEJ9wwJ6KYyMG4cuGH4vn0zyW5ZPaQqwrX+4IluEFlyuOXxD6vHMPAyiwR2AUPDC2V3mQVBSm0jr4rP6wA==',
+      GF_AUTH_GOOGLE_CLIENT_SECRET: 'AgCieAsYaZXFWaT0ofY+HYgEH3C6HNEVC/B/WuzAy0bPAq10tzZAlO+Rbcr8uAWfF/5sIDiP36cjFMFMkJMsvWMgybn3CR+j6Z2zoR+ZE3aNVQALs44ZTL5vap+9DB3wkCiY/6iHuRKBgDxPW4pcIa4eUss/VEzljUistq5wskzsYquIYirFSHHsgFTxg+65vSXo63kMNJbCCWeeFsGIh4U+G25aFv1fjlwIoG6CRboNNA7etLVDiS5vcLXdmyZ3ymsY44KpTN2GAuBApDIfG0RAcZMIhjrC7gcLNXEDADBjLcIyWgLmGy4BS3kh6EWhScDOZRf4ohoayVi145o42uZR/6RrvNmCS9kut0Bkls0UuMLM7YEGyYDrJY8gLD++qL65r2nQRtugGti29FMC9c+lR+JhexCAKyGrQBW/hSJYfHPX6KEizuAwWPssKROgvw5z/V78xb3AkcRKsAzqYUxWgqg5ABovNQGUdJiqioXa1oBqP9ryNM4b4N5XwriKm1KtscDpXf+duT7GMA80p4U67i/myu+G0MNn4d3v+McJ8zx5bFb1ULbuxphIOEpLCYFPEjiaREF86bfwtwu8vCS/H2WSGlTaeueUM/mP1rZd6i4ZkMdID6y2uKJsfxTLIQP6z9SPcUof3Gaw+6RWDWCZxa/HMbCw89u3aDaBRRipWsXf5/2VHDzGMkR+qZ1agBGFQIEvoqW7h1cG3Q7NBaLUadw0UKXrL2U=',
+    },
   },
 
 }
