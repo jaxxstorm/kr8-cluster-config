@@ -48,7 +48,7 @@
     enable_node_exporter: false,
     prometheus+: {
       externalName: 'prom-k8s.home.lbrlabs.com',
-      volumeClaimTemplate: {},
+      // volumeClaimTemplate: {},
       retention: '2d',
     },
   },
