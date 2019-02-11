@@ -12,6 +12,7 @@
     nginx_ingress: { path: 'components/nginx_ingress' },
     prometheus: { path: 'components/prometheus' },
     unifi_exporter: { path: 'components/unifi_exporter' },
+    nfs_client_provisioner: { path: 'components/nfs_client_provisioner' },
   },
 
   sealed_secrets+: (import 'sealed-secret.key'),
@@ -50,6 +51,11 @@
       volumeClaimTemplate: {},
       retention: '2d',
     },
+  },
+
+  nfs_client_provisioner+: {
+    nfs_server: 'jupiter.home.lbrlabs.com',
+    base_path: '/export',
   },
 
 }
